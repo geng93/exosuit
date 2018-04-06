@@ -1,0 +1,138 @@
+name: "Exosuit"
+layer {
+  name: "inputdata"
+  type: "MemoryData"
+  top: "fulldata"
+  top: "label"
+  include {
+    phase: TRAIN
+  }
+  memory_data_param 
+  {
+    batch_size: 10
+    channels: 1 
+    height: 1
+    width: 21
+  }
+}
+layer {
+  name: "test_inputdata"
+  type: "MemoryData"
+  top: "fulldata"
+  top: "label"
+  include {
+    phase: TEST
+  }
+  memory_data_param 
+  {
+    batch_size: 10
+    channels: 1 
+    height: 1
+    width: 21
+  }
+}
+layer {
+  name: "ip3"
+  type: "InnerProduct"
+  bottom: "fulldata"
+  top: "ip3"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  inner_product_param {
+    num_output: 15
+    weight_filler {
+      type: "gaussian"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+
+
+layer {
+  name: "ip3sig"
+  bottom: "ip3"
+  top: "ip3sig"
+  type: "Sigmoid"
+}
+
+layer {
+  name: "ip2"
+  type: "InnerProduct"
+  bottom: "ip3sig"
+  top: "ip2"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  inner_product_param {
+    num_output: 5
+    weight_filler {
+      type: "gaussian"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+
+layer {
+  name: "ip2sig"
+  bottom: "ip2"
+  top: "ip2sig"
+  type: "Sigmoid"
+}
+
+layer {
+  name: "ip1"
+  type: "InnerProduct"
+  bottom: "ip2sig"
+  top: "output"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+
+
+
+layer {
+  name: "loss"
+  type: "EuclideanLoss"
+  bottom: "output"
+  bottom: "label" 
+  top: "loss"
+  # include {
+  #   phase: TRAIN
+  # }
+}

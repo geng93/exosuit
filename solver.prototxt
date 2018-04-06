@@ -1,0 +1,16 @@
+net: "model.prototxt"
+base_lr: 0.02
+lr_policy: "step"
+gamma: 0.1
+stepsize: 50000
+# momentum: 0.9
+display: 1000
+max_iter: 500000
+snapshot: 100000
+snapshot_prefix: "snapshots/exosuit"
+solver_mode: CPU
+test_iter: 1
+test_interval: 1000
+type: "SGD"
+
+#previously tried solver:   AdaDelta Adam AdaGrad RMSProp
